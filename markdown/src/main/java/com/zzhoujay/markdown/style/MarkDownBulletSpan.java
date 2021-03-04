@@ -24,6 +24,10 @@ public class MarkDownBulletSpan extends BulletSpan {
     private static final Path CIRCLE_BULLET_PATH;
     private static final Path RECT_BULLET_PATH;
 
+    public static final String STYLE_CIRCLE = "circle";
+    public static final String STYLE_SQUARE = "square";
+    private static String _style = STYLE_CIRCLE;
+
     static {
         float w = BULLET_RADIUS;
 
@@ -33,6 +37,10 @@ public class MarkDownBulletSpan extends BulletSpan {
         CIRCLE_BULLET_PATH = new Path();
         // Bullet is slightly better to avoid aliasing artifacts on mdpi devices.
         CIRCLE_BULLET_PATH.addCircle(0.0f, 0.0f, w, Path.Direction.CW);
+    }
+
+    public static void setStyle(String style) {
+        _style = style;
     }
 
     private final int mBulletColor;
@@ -85,14 +93,18 @@ public class MarkDownBulletSpan extends BulletSpan {
             p.setStyle(mLevel == 1 ? Paint.Style.STROKE : Paint.Style.FILL);
 
             if (!c.isHardwareAccelerated()) {
-                Path path = mLevel >= 2 ? RECT_BULLET_PATH : CIRCLE_BULLET_PATH;
+                Path path = STYLE_SQUARE.equals(_style) || mLevel >= 2 ? RECT_BULLET_PATH : CIRCLE_BULLET_PATH;
 
                 c.save();
                 c.translate(x + mMargin - GAP_WIDTH, dy);
                 c.drawPath(path, p);
                 c.restore();
             } else {
-                c.drawCircle(x + mMargin - GAP_WIDTH, dy, BULLET_RADIUS, p);
+                if (STYLE_SQUARE.equals(_style)) {
+                    c.drawRect(x + mMargin - GAP_WIDTH - BULLET_RADIUS, dy - BULLET_RADIUS, x + mMargin - GAP_WIDTH + BULLET_RADIUS, dy + BULLET_RADIUS, p);
+                } else {
+                    c.drawCircle(x + mMargin - GAP_WIDTH, dy, BULLET_RADIUS, p);
+                }
             }
 
             p.setStyle(oldStyle);
