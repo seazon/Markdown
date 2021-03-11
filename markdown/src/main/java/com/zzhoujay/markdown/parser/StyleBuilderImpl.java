@@ -55,6 +55,9 @@ public class StyleBuilderImpl implements StyleBuilder {
     private final int code_background_color;
     private final int link_color;
     private final int h_under_line_color;
+    private final int bullet_style;
+    private final float bullet_horizontal_offset;
+    private final float bullet_vertical_offset;
 
     private WeakReference<TextView> textViewWeakReference;
     private Html.ImageGetter imageGetter;
@@ -78,6 +81,9 @@ public class StyleBuilderImpl implements StyleBuilder {
             code_background_color = 0x0c37474f;
             link_color = 0xdc3e7bc9;
             h_under_line_color = 0x1837474f;
+            bullet_style = 0;
+            bullet_horizontal_offset = 0;
+            bullet_vertical_offset = 0;
         } else {
             h1_text_color = a.getColor(R.styleable.MarkdownTheme_h1TextColor, 0);
             h6_text_color = a.getColor(R.styleable.MarkdownTheme_h6TextColor, 0);
@@ -87,6 +93,9 @@ public class StyleBuilderImpl implements StyleBuilder {
             code_background_color = a.getColor(R.styleable.MarkdownTheme_codeBackgroundColor, 0);
             link_color = a.getColor(R.styleable.MarkdownTheme_linkColor, 0);
             h_under_line_color = a.getColor(R.styleable.MarkdownTheme_underlineColor, 0);
+            bullet_style = a.getInt(R.styleable.MarkdownTheme_bulletStyle, 0);
+            bullet_horizontal_offset = a.getDimension(R.styleable.MarkdownTheme_bulletHorizontalOffset, 0);
+            bullet_vertical_offset = a.getDimension(R.styleable.MarkdownTheme_bulletVerticalOffset, 0);
         }
 
         a.recycle();
@@ -184,7 +193,7 @@ public class StyleBuilderImpl implements StyleBuilder {
     @Override
     public SpannableStringBuilder ul(CharSequence charSequence, int level) {
         SpannableStringBuilder spannableStringBuilder = SpannableStringBuilder.valueOf(charSequence);
-        BulletSpan bulletSpan = new MarkDownBulletSpan(level, h1_text_color, 0);
+        BulletSpan bulletSpan = new MarkDownBulletSpan(level, h1_text_color, bullet_style, bullet_horizontal_offset, bullet_vertical_offset, 0);
         spannableStringBuilder.setSpan(bulletSpan, 0, spannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableStringBuilder;
     }
@@ -192,7 +201,7 @@ public class StyleBuilderImpl implements StyleBuilder {
     @Override
     public SpannableStringBuilder ol(CharSequence charSequence, int level, int index) {
         SpannableStringBuilder spannableStringBuilder = SpannableStringBuilder.valueOf(charSequence);
-        BulletSpan bulletSpan = new MarkDownBulletSpan(level, h1_text_color, index);
+        BulletSpan bulletSpan = new MarkDownBulletSpan(level, h1_text_color, bullet_style, bullet_horizontal_offset, bullet_vertical_offset, index);
         spannableStringBuilder.setSpan(bulletSpan, 0, spannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableStringBuilder;
     }

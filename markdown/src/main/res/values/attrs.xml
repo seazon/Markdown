@@ -13,6 +13,9 @@
         <attr name="codeBackgroundColor" format="color|reference"/>
         <attr name="linkColor" format="color|reference"/>
         <attr name="underlineColor" format="color|reference"/>
+        <attr name="bulletStyle" format="integer"/>
+        <attr name="bulletHorizontalOffset" format="dimension" />
+        <attr name="bulletVerticalOffset" format="dimension" />
     </declare-styleable>
 
 </resources>

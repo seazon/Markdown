@@ -53,7 +53,6 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 long time = System.nanoTime();
-                MarkDownBulletSpan.setStyle(MarkDownBulletSpan.STYLE_SQUARE);
                 Spanned spanned = MarkDown.fromMarkdown(stream, new Html.ImageGetter() {
                     public static final String TAG = "Markdown";
 

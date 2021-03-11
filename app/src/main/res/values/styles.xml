@@ -2,9 +2,20 @@
 <resources>
     <style name="AppTheme.DayNight" parent="AppTheme.Light"/>
     <style name="AppTheme" parent="android:Theme.DeviceDefault">
-        <item name="markdownStyle">@style/Markdown</item>
+        <item name="markdownStyle">@style/MyMarkdown</item>
     </style>
     <style name="AppTheme.Light" parent="android:Theme.DeviceDefault.Light">
-        <item name="markdownStyle">@style/Markdown.Light</item>
+        <item name="markdownStyle">@style/MyMarkdown.Light</item>
+    </style>
+
+    <style name="MyMarkdown" parent="Markdown">
+        <item name="bulletStyle">1</item>
+        <item name="bulletHorizontalOffset">-5dp</item>
+        <item name="bulletVerticalOffset">-5dp</item>
+    </style>
+    <style name="MyMarkdown.Light" parent="Markdown.Light">
+        <item name="bulletStyle">1</item>
+        <item name="bulletHorizontalOffset">-4dp</item>
+        <item name="bulletVerticalOffset">0dp</item>
     </style>
 </resources>

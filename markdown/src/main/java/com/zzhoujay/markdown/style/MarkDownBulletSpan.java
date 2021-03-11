@@ -24,9 +24,9 @@ public class MarkDownBulletSpan extends BulletSpan {
     private static final Path CIRCLE_BULLET_PATH;
     private static final Path RECT_BULLET_PATH;
 
-    public static final String STYLE_CIRCLE = "circle";
-    public static final String STYLE_SQUARE = "square";
-    private static String _style = STYLE_CIRCLE;
+    public static final int STYLE_DEFAULT = 0;
+    public static final int STYLE_CIRCLE = 1;
+    public static final int STYLE_SQUARE = 2;
 
     static {
         float w = BULLET_RADIUS;
@@ -39,17 +39,16 @@ public class MarkDownBulletSpan extends BulletSpan {
         CIRCLE_BULLET_PATH.addCircle(0.0f, 0.0f, w, Path.Direction.CW);
     }
 
-    public static void setStyle(String style) {
-        _style = style;
-    }
-
     private final int mBulletColor;
+    private final int mBulletStyle;
+    private final float mBulletHorizontalOffset;
+    private final float mBulletVerticalOffset;
     private final String mIndex;
     private final int mLevel;
 
     private int mMargin;
 
-    public MarkDownBulletSpan(int level, int bulletColor, int pointIndex) {
+    public MarkDownBulletSpan(int level, int bulletColor, int bulletStyle, float bulletHorizontalOffset, float bulletVerticalOffset, int pointIndex) {
         super(GAP_WIDTH, bulletColor);
 
         mLevel = level;
@@ -66,6 +65,9 @@ public class MarkDownBulletSpan extends BulletSpan {
         }
 
         mBulletColor = bulletColor;
+        mBulletStyle = bulletStyle;
+        mBulletHorizontalOffset = bulletHorizontalOffset;
+        mBulletVerticalOffset = bulletVerticalOffset;
     }
 
     @Override
@@ -93,17 +95,19 @@ public class MarkDownBulletSpan extends BulletSpan {
             p.setStyle(mLevel == 1 ? Paint.Style.STROKE : Paint.Style.FILL);
 
             if (!c.isHardwareAccelerated()) {
-                Path path = STYLE_SQUARE.equals(_style) || mLevel >= 2 ? RECT_BULLET_PATH : CIRCLE_BULLET_PATH;
+                Path path = mLevel >= 2 ? RECT_BULLET_PATH : CIRCLE_BULLET_PATH;
+                if (STYLE_CIRCLE == mBulletStyle) path = CIRCLE_BULLET_PATH;
+                else if (STYLE_SQUARE == mBulletStyle) path = RECT_BULLET_PATH;
 
                 c.save();
                 c.translate(x + mMargin - GAP_WIDTH, dy);
                 c.drawPath(path, p);
                 c.restore();
             } else {
-                if (STYLE_SQUARE.equals(_style)) {
-                    c.drawRect(x + mMargin - GAP_WIDTH - BULLET_RADIUS, dy - BULLET_RADIUS, x + mMargin - GAP_WIDTH + BULLET_RADIUS, dy + BULLET_RADIUS, p);
+                if (STYLE_SQUARE == mBulletStyle) {
+                    c.drawRect(x + mMargin - GAP_WIDTH - BULLET_RADIUS + mBulletHorizontalOffset, dy - BULLET_RADIUS + mBulletVerticalOffset, x + mMargin - GAP_WIDTH + BULLET_RADIUS + mBulletHorizontalOffset, dy + BULLET_RADIUS + mBulletVerticalOffset, p);
                 } else {
-                    c.drawCircle(x + mMargin - GAP_WIDTH, dy, BULLET_RADIUS, p);
+                    c.drawCircle(x + mMargin - GAP_WIDTH + mBulletHorizontalOffset, dy + mBulletVerticalOffset, BULLET_RADIUS, p);
                 }
             }
 
